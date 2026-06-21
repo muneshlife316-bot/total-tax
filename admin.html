@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Total Tax Hub - Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        body {
+            background: #f0f4f8;
+            min-height: 100vh;
+        }
+
+        /* Login Page */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a3a5c, #2d5f85);
+        }
+
+        .login-card {
+            background: white;
+            padding: 3rem;
+            border-radius: 2rem;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-card .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-card .logo i {
+            font-size: 3rem;
+            color: #1a3a5c;
+            background: #dce7f5;
+            padding: 1rem;
+            border-radius: 50%;
+        }
+
+        .login-card .logo h2 {
+            margin-top: 0.5rem;
+            color: #1a3a5c;
+        }
+
+        .login-card .logo p {
+            color: #6b8ba5;
+            font-size: 0.9rem;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            margin-bottom: 1rem;
+            border: 2px solid #dbe0e9;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: 0.3s;
+        }
+
+        .login-card input:focus {
+            outline: none;
+            border-color: #2d5f85;
+            box-shadow: 0 0 0 4px rgba(45, 95, 133, 0.1);
+        }
+
+        .login-card button {
+            width: 100%;
+            padding: 0.9rem;
+            background: #124263;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .login-card button:hover {
+            background: #0f3857;
+        }
+
+        .login-card button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .login-error {
+            color: #c7453a;
+            margin-top: 1rem;
+            display: none;
+            text-align: center;
+            padding: 0.5rem;
+            background: #ffe8e8;
+            border-radius: 8px;
+        }
+
+        .login-loading {
+            display: none;
+            text-align: center;
+            margin-top: 0.5rem;
+            color: #6b8ba5;
+        }
+
+        .login-loading i {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+            padding: 2rem;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .navbar h1 {
+            color: #1a3a5c;
+            font-size: 1.5rem;
+        }
+
+        .navbar h1 i {
+            color: #2d5f85;
+            margin-right: 0.5rem;
+        }
+
+        .navbar .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .navbar .user-info span {
+            color: #2d5f85;
+            font-weight: 500;
+        }
+
+        .navbar .user-info .role-badge {
+            background: #dce7f5;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: #1a3a5c;
+        }
+
+        .logout-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 0.5rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .logout-btn:hover {
+            background: #c0392b;
+        }
+
+        /* Stats */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            transition: 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .stat-card .number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1a3a5c;
+        }
+
+        .stat-card .label {
+            color: #6b8ba5;
+            font-size: 0.9rem;
+            margin-top: 0.3rem;
+        }
+
+        .stat-card .icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 0.8rem 2rem;
+            background: white;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            color: #4a6f8f;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .tab-btn i {
+            font-size: 1rem;
+        }
+
+        .tab-btn.active {
+            background: #124263;
+            color: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* Search */
+        .search-bar {
+            margin-bottom: 2rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-bar input {
+            flex: 1;
+            padding: 0.8rem 1.5rem;
+            border: 2px solid #e9edf4;
+            border-radius: 30px;
+            font-size: 1rem;
+            min-width: 200px;
+            background: white;
+            transition: 0.3s;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: #2d5f85;
+            box-shadow: 0 0 0 4px rgba(45, 95, 133, 0.1);
+        }
+
+        .search-bar .info-text {
+            font-size: 0.85rem;
+            color: #6b8ba5;
+            white-space: nowrap;
+        }
+
+        /* Table View */
+        .table-container {
+            background: white;
+            border-radius: 1.2rem;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        thead {
+            background: #f8fafc;
+            border-bottom: 2px solid #e9edf4;
+        }
+
+        thead th {
+            padding: 1rem 1.2rem;
+            text-align: left;
+            font-weight: 600;
+            color: #1a3a5c;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e9edf4;
+            transition: 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        tbody td {
+            padding: 0.8rem 1.2rem;
+            vertical-align: middle;
+            font-size: 0.9rem;
+            color: #2d4a6a;
+        }
+
+        .td-name {
+            font-weight: 500;
+            color: #1a3a5c;
+        }
+
+        .td-mobile {
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .td-pan {
+            font-family: monospace;
+            font-weight: 600;
+            color: #2d5f85;
+        }
+
+        .td-status {
+            width: 130px;
+        }
+
+        .td-status select {
+            padding: 0.3rem 0.8rem;
+            border: 2px solid #e9edf4;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            background: white;
+            cursor: pointer;
+            width: 100%;
+            max-width: 120px;
+        }
+
+        .td-status select:focus {
+            outline: none;
+            border-color: #2d5f85;
+        }
+
+        .td-status select:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: #f5f7fa;
+        }
+
+        .td-assignees {
+            font-size: 0.8rem;
+        }
+
+        .assignee-tag {
+            background: #dce7f5;
+            padding: 0.15rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            color: #1a3a5c;
+            display: inline-block;
+            margin: 0.1rem;
+        }
+
+        .unassigned-tag {
+            background: #ffeaa7;
+            color: #d63031;
+            padding: 0.15rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        .td-actions {
+            display: flex;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .td-actions .btn-icon {
+            padding: 0.3rem 0.7rem;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .btn-view {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-view:hover {
+            background: #2980b9;
+        }
+
+        .btn-edit {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #d68910;
+        }
+
+        .btn-delete {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c0392b;
+        }
+
+        .td-remark {
+            max-width: 150px;
+        }
+
+        .td-remark .remark-preview {
+            font-size: 0.8rem;
+            color: #6b8ba5;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+        }
+
+        .td-remark .remark-preview:hover {
+            color: #2d5f85;
+        }
+
+        .readonly-badge-sm {
+            background: #dfe6e9;
+            color: #2d3436;
+            padding: 0.1rem 0.4rem;
+            border-radius: 10px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            margin-left: 0.3rem;
+        }
+
+        .assigned-badge-sm {
+            background: #55efc4;
+            color: #00695c;
+            padding: 0.1rem 0.4rem;
+            border-radius: 10px;
+            font-size: 0.6rem;
+            font-weight: 600;
+            margin-left: 0.3rem;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 1.5rem;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 2.5rem;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e9edf4;
+        }
+
+        .modal-header h2 {
+            color: #1a3a5c;
+            font-size: 1.3rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b8ba5;
+            transition: 0.2s;
+        }
+
+        .modal-close:hover {
+            color: #e74c3c;
+            transform: rotate(90deg);
+        }
+
+        .modal-body .detail-row {
+            display: grid;
+            grid-template-columns: 140px 1fr;
+            gap: 0.8rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #f0f4f8;
+        }
+
+        .modal-body .detail-row .label {
+            font-weight: 600;
+            color: #1a3a5c;
+        }
+
+        .modal-body .detail-row .value {
+            color: #2d4a6a;
+        }
+
+        .modal-body .remark-history {
+            margin-top: 1rem;
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 12px;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+
+        .modal-body .remark-history .remark-item {
+            padding: 0.4rem 0;
+            font-size: 0.85rem;
+            color: #2d4a6a;
+            border-bottom: 1px solid #e9edf4;
+        }
+
+        .modal-body .remark-history .remark-item:last-child {
+            border-bottom: none;
+        }
+
+        .modal-body .remark-history .remark-item .remark-time {
+            color: #6b8ba5;
+            font-size: 0.75rem;
+        }
+
+        .modal-body .assign-section {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 2px solid #f0f4f8;
+        }
+
+        .modal-body .assign-toggles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .modal-body .assign-toggle {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.2rem 0.6rem;
+            background: #f0f4f8;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 2px solid transparent;
+            user-select: none;
+            font-size: 0.85rem;
+        }
+
+        .modal-body .assign-toggle:hover {
+            background: #e9edf4;
+        }
+
+        .modal-body .assign-toggle.selected {
+            background: #dce7f5;
+            border-color: #2d5f85;
+        }
+
+        .modal-body .assign-toggle .toggle-check {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #b0c8db;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            transition: 0.3s;
+            flex-shrink: 0;
+        }
+
+        .modal-body .assign-toggle.selected .toggle-check {
+            background: #2d5f85;
+            border-color: #2d5f85;
+        }
+
+        .modal-body .assign-toggle .toggle-check i {
+            color: white;
+            font-size: 0.6rem;
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .modal-body .assign-toggle.selected .toggle-check i {
+            opacity: 1;
+        }
+
+        .modal-body .assign-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+        }
+
+        .modal-body .btn-assign {
+            padding: 0.4rem 1.2rem;
+            background: #27ae60;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .modal-body .btn-assign:hover {
+            background: #229954;
+        }
+
+        .modal-body .btn-assign-all {
+            padding: 0.4rem 1.2rem;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .modal-body .btn-assign-all:hover {
+            background: #2980b9;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #6b8ba5;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #b0c8db;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #27ae60;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: none;
+            z-index: 2000;
+            animation: slideIn 0.3s ease;
+            max-width: 400px;
+        }
+
+        .notification.error {
+            background: #e74c3c;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard { padding: 1rem; }
+            .stats-bar { grid-template-columns: 1fr 1fr; }
+            .modal-content { padding: 1.5rem; margin: 1rem; }
+            .modal-body .detail-row {
+                grid-template-columns: 1fr;
+                gap: 0.2rem;
+            }
+            table { min-width: 700px; }
+            thead th, tbody td { padding: 0.6rem 0.8rem; }
+            .search-bar .info-text { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <i class="fas fa-file-invoice"></i>
+                <h2>Total Tax Hub</h2>
+                <p>Admin Dashboard</p>
+            </div>
+            <input type="email" id="loginEmail" placeholder="Email address" autocomplete="email">
+            <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password">
+            <button onclick="login()" id="loginBtn">
+                <i class="fas fa-sign-in-alt"></i> Login
+            </button>
+            <div id="loginError" class="login-error">
+                <i class="fas fa-exclamation-circle"></i> Invalid credentials. Please try again.
+            </div>
+            <div id="loginLoading" class="login-loading">
+                <i class="fas fa-spinner"></i> Logging in...
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <i class="fas fa-check-circle"></i>
+        <span id="notificationText">Success!</span>
+    </div>
+
+    <!-- Modal -->
+    <div id="taskModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Task Details</h2>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+        <div class="navbar">
+            <h1><i class="fas fa-file-invoice"></i> Total Tax Hub Admin</h1>
+            <div class="user-info">
+                <span id="userNameDisplay">User</span>
+                <span class="role-badge" id="userRoleDisplay">Role</span>
+                <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+            </div>
+        </div>
+
+        <div class="stats-bar" id="statsBar">
+            <div class="stat-card">
+                <div class="icon">📊</div>
+                <div class="number" id="totalTasks">0</div>
+                <div class="label">Total Tasks</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">⏳</div>
+                <div class="number" id="pendingTasks">0</div>
+                <div class="label">Pending</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">🔄</div>
+                <div class="number" id="inProgressTasks">0</div>
+                <div class="label">In Progress</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">✅</div>
+                <div class="number" id="completedTasks">0</div>
+                <div class="label">Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">👤</div>
+                <div class="number" id="assignedTasks">0</div>
+                <div class="label">Assigned</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="mytasks" onclick="switchTab('mytasks')">
+                <i class="fas fa-tasks"></i> My Tasks
+            </button>
+            <button class="tab-btn" data-tab="alltasks" onclick="switchTab('alltasks')">
+                <i class="fas fa-list"></i> All Tasks
+            </button>
+            <button class="tab-btn" id="assignTab" data-tab="assigntasks" onclick="switchTab('assigntasks')" style="display:none;">
+                <i class="fas fa-user-plus"></i> Assign Tasks
+            </button>
+        </div>
+
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="🔍 Search by name, mobile, service, PAN..." oninput="filterTasks()">
+            <span class="info-text">
+                <i class="fas fa-info-circle"></i> Click <i class="fas fa-eye"></i> to view full details
+            </span>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Mobile</th>
+                        <th>PAN (last 4)</th>
+                        <th>Service</th>
+                        <th>Status</th>
+                        <th>Assigned To</th>
+                        <th>Remark</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="taskTableBody">
+                    <!-- Dynamic content -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let allTasks = [];
+        let allUsers = [];
+        let currentTab = 'mytasks';
+        let tempAssignments = {};
+        let currentModalTaskId = null;
+
+        function showNotification(message, isError = false) {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            text.textContent = message;
+            notification.className = 'notification' + (isError ? ' error' : '');
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Login
+        async function login() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            const loginBtn = document.getElementById('loginBtn');
+            const loginError = document.getElementById('loginError');
+            const loginLoading = document.getElementById('loginLoading');
+
+            if (!email || !password) {
+                loginError.style.display = 'block';
+                loginError.textContent = 'Please enter both email and password.';
+                return;
+            }
+
+            loginBtn.disabled = true;
+            loginLoading.style.display = 'block';
+            loginError.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await response.json();
+                
+                if (data.success) {
+                    currentUser = data.user;
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('dashboard').style.display = 'block';
+                    document.getElementById('userNameDisplay').textContent = currentUser.name || currentUser.email;
+                    document.getElementById('userRoleDisplay').textContent = currentUser.role === 'super_admin' ? 'Admin' : 'User';
+                    
+                    if (currentUser.role === 'super_admin') {
+                        document.getElementById('assignTab').style.display = 'inline-block';
+                    }
+                    
+                    loadUsers();
+                    loadTasks();
+                    showNotification('Welcome back, ' + (currentUser.name || currentUser.email) + '!');
+                } else {
+                    loginError.style.display = 'block';
+                    loginError.textContent = 'Invalid email or password. Please try again.';
+                }
+            } catch (error) {
+                loginError.style.display = 'block';
+                loginError.textContent = 'Network error. Please check your connection.';
+            } finally {
+                loginBtn.disabled = false;
+                loginLoading.style.display = 'none';
+            }
+        }
+
+        // Logout
+        async function logout() {
+            await fetch('/api/logout', { method: 'POST' });
+            currentUser = null;
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('loginError').style.display = 'none';
+            // Clear login fields
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+            showNotification('Logged out successfully');
+        }
+
+        // Load users
+        async function loadUsers() {
+            try {
+                const response = await fetch('/api/users');
+                allUsers = await response.json();
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
+        // Load tasks
+        async function loadTasks() {
+            try {
+                const response = await fetch('/api/tasks');
+                allTasks = await response.json();
+                updateStats();
+                renderTable(currentTab);
+            } catch (error) {
+                console.error('Error loading tasks:', error);
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            const total = allTasks.length;
+            const pending = allTasks.filter(t => t.status === 'pending').length;
+            const inProgress = allTasks.filter(t => t.status === 'in_progress').length;
+            const completed = allTasks.filter(t => t.status === 'completed').length;
+            const assigned = allTasks.filter(t => t.assigned_to && t.assigned_to.length > 0).length;
+            
+            document.getElementById('totalTasks').textContent = total;
+            document.getElementById('pendingTasks').textContent = pending;
+            document.getElementById('inProgressTasks').textContent = inProgress;
+            document.getElementById('completedTasks').textContent = completed;
+            document.getElementById('assignedTasks').textContent = assigned;
+        }
+
+        // Switch tab
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+            renderTable(tab);
+        }
+
+        // Check if user is assigned to task
+        function isAssignedToTask(task) {
+            return task.assigned_to && task.assigned_to.includes(currentUser.id);
+        }
+
+        // Render table
+        function renderTable(tab) {
+            const tbody = document.getElementById('taskTableBody');
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            
+            let filteredTasks = [];
+            
+            if (tab === 'mytasks') {
+                filteredTasks = allTasks.filter(task => 
+                    task.assigned_to && task.assigned_to.includes(currentUser.id)
+                );
+            } else if (tab === 'alltasks') {
+                filteredTasks = allTasks;
+            } else if (tab === 'assigntasks' && currentUser.role === 'super_admin') {
+                filteredTasks = allTasks.filter(task => 
+                    !task.assigned_to || task.assigned_to.length === 0
+                );
+            }
+            
+            // Apply search
+            if (searchTerm) {
+                filteredTasks = filteredTasks.filter(task => 
+                    task.name.toLowerCase().includes(searchTerm) ||
+                    task.mobile.includes(searchTerm) ||
+                    task.service.toLowerCase().includes(searchTerm) ||
+                    task.pan_last4.includes(searchTerm) ||
+                    (task.requirements && task.requirements.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            if (filteredTasks.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9">
+                            <div class="empty-state">
+                                <i class="fas fa-inbox"></i>
+                                <p>${tab === 'assigntasks' ? 'All tasks have been assigned!' : 'No tasks found'}</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = filteredTasks.map((task, index) => {
+                const isAssignedToMe = isAssignedToTask(task);
+                const canEdit = currentUser.role === 'super_admin' || isAssignedToMe;
+                const assignedUsers = task.assigned_to || [];
+                const isAssigned = assignedUsers.length > 0;
+                
+                return `
+                <tr>
+                    <td style="font-weight:600;color:#6b8ba5;">${index + 1}</td>
+                    <td class="td-name">
+                        ${task.name}
+                        ${isAssignedToMe ? '<span class="assigned-badge-sm"><i class="fas fa-check-circle"></i> Me</span>' : ''}
+                        ${!canEdit && currentUser.role !== 'super_admin' ? '<span class="readonly-badge-sm"><i class="fas fa-lock"></i> RO</span>' : ''}
+                    </td>
+                    <td class="td-mobile">${task.mobile}</td>
+                    <td class="td-pan">****${task.pan_last4}</td>
+                    <td>${task.service}</td>
+                    <td class="td-status">
+                        <select id="status_${task.id}" onchange="updateTaskStatus(${task.id}, this.value)" ${!canEdit ? 'disabled' : ''}>
+                            <option value="pending" ${task.status === 'pending' ? 'selected' : ''}>Pending</option>
+                            <option value="in_progress" ${task.status === 'in_progress' ? 'selected' : ''}>In Progress</option>
+                            <option value="completed" ${task.status === 'completed' ? 'selected' : ''}>Completed</option>
+                        </select>
+                    </td>
+                    <td class="td-assignees">
+                        ${isAssigned ? assignedUsers.map(id => {
+                            const user = allUsers.find(u => u.id === id);
+                            return user ? `<span class="assignee-tag">${user.name || user.email}</span>` : '';
+                        }).join('') : '<span class="unassigned-tag">Unassigned</span>'}
+                    </td>
+                    <td class="td-remark">
+                        ${task.remark ? `<span class="remark-preview" title="${task.remark}">${task.remark.length > 30 ? task.remark.substring(0, 30) + '...' : task.remark}</span>` : '<span style="color:#b0c8db;font-size:0.8rem;">—</span>'}
+                    </td>
+                    <td>
+                        <div class="td-actions">
+                            <button class="btn-icon btn-view" onclick="viewTask(${task.id})" title="View Full Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            ${currentUser.role === 'super_admin' ? `
+                                <button class="btn-icon btn-delete" onclick="deleteTask(${task.id})" title="Delete Task">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </td>
+                </tr>
+                `;
+            }).join('');
+        }
+
+        // View task in modal
+        function viewTask(taskId) {
+            const task = allTasks.find(t => t.id === taskId);
+            if (!task) return;
+            
+            currentModalTaskId = taskId;
+            const isAssignedToMe = isAssignedToTask(task);
+            const canEdit = currentUser.role === 'super_admin' || isAssignedToMe;
+            const assignedUsers = task.assigned_to || [];
+            
+            const modalBody = document.getElementById('modalBody');
+            const modalTitle = document.getElementById('modalTitle');
+            modalTitle.textContent = `Task #${task.id} - ${task.name}`;
+            
+            let assignHTML = '';
+            if (currentUser.role === 'super_admin') {
+                const currentAssigned = tempAssignments[taskId] || task.assigned_to || [];
+                assignHTML = `
+                    <div class="assign-section">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+                            <strong><i class="fas fa-user-check"></i> Assign to:</strong>
+                            <button class="btn-assign-all" onclick="toggleAllUsersModal(${taskId})">
+                                <i class="fas fa-check-double"></i> Select All
+                            </button>
+                        </div>
+                        <div class="assign-toggles" id="modalToggles_${taskId}">
+                            ${allUsers.map(user => {
+                                const isSelected = currentAssigned.includes(user.id);
+                                return `
+                                    <div class="assign-toggle ${isSelected ? 'selected' : ''}" 
+                                         onclick="toggleAssignmentModal(${taskId}, ${user.id})">
+                                        <div class="toggle-check">
+                                            <i class="fas fa-check"></i>
+                                        </div>
+                                        <span>${user.name || user.email}</span>
+                                        <span style="font-size:0.65rem;color:#6b8ba5;">${user.role === 'super_admin' ? 'Admin' : 'User'}</span>
+                                    </div>
+                                `;
+                            }).join('')}
+                        </div>
+                        <div class="assign-actions">
+                            <button class="btn-assign" onclick="saveAssignmentModal(${taskId})">
+                                <i class="fas fa-save"></i> Save Assignment
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            modalBody.innerHTML = `
+                <div class="detail-row">
+                    <span class="label">Full Name:</span>
+                    <span class="value">${task.name}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Mobile:</span>
+                    <span class="value">${task.mobile}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">PAN (last 4):</span>
+                    <span class="value">****${task.pan_last4}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Service:</span>
+                    <span class="value">${task.service}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Status:</span>
+                    <span class="value">
+                        <span class="status-badge-sm status-${task.status}">${task.status.replace('_', ' ').toUpperCase()}</span>
+                        ${isAssignedToMe ? '<span class="assigned-badge-sm"><i class="fas fa-check-circle"></i> Assigned to me</span>' : ''}
+                    </span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Requirements:</span>
+                    <span class="value">${task.requirements || '—'}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Created:</span>
+                    <span class="value">${task.created_at}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Assigned To:</span>
+                    <span class="value">
+                        ${assignedUsers.length > 0 ? assignedUsers.map(id => {
+                            const user = allUsers.find(u => u.id === id);
+                            return user ? `<span class="assignee-tag">${user.name || user.email}</span>` : '';
+                        }).join('') : '<span class="unassigned-tag">Unassigned</span>'}
+                    </span>
+                </div>
+                ${task.remark ? `
+                    <div class="detail-row">
+                        <span class="label">Latest Remark:</span>
+                        <span class="value">${task.remark}</span>
+                    </div>
+                ` : ''}
+                ${task.remark_history && task.remark_history.length > 0 ? `
+                    <div style="margin-top:1rem;">
+                        <strong style="color:#1a3a5c;">Remark History:</strong>
+                        <div class="remark-history">
+                            ${task.remark_history.slice().reverse().map(r => `
+                                <div class="remark-item">
+                                    <i class="fas fa-comment" style="color:#4a7a9c;margin-right:0.3rem;"></i>
+                                    ${r.remark}
+                                    <span class="remark-time">- ${r.user} at ${r.timestamp}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+                ${assignHTML}
+                <div style="margin-top:1.5rem;padding-top:1rem;border-top:2px solid #f0f4f8;">
+                    <div style="display:flex;gap:0.5rem;">
+                        <input type="text" id="modalRemark_${taskId}" placeholder="Add remark..." style="flex:1;padding:0.5rem 1rem;border:2px solid #e9edf4;border-radius:20px;font-size:0.9rem;" ${!canEdit ? 'disabled' : ''}>
+                        <button onclick="addModalRemark(${taskId})" style="padding:0.5rem 1.5rem;background:#2d5f85;color:white;border:none;border-radius:20px;cursor:pointer;font-weight:500;${!canEdit ? 'opacity:0.5;cursor:not-allowed;' : ''}" ${!canEdit ? 'disabled' : ''}>
+                            <i class="fas fa-pen"></i> Add
+                        </button>
+                    </div>
+                    ${!canEdit && currentUser.role !== 'super_admin' ? '<div style="margin-top:0.3rem;font-size:0.8rem;color:#6b8ba5;"><i class="fas fa-lock"></i> Read only - You are not assigned to this task</div>' : ''}
+                </div>
+            `;
+            
+            document.getElementById('taskModal').classList.add('active');
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('taskModal').classList.remove('active');
+        }
+
+        // Toggle assignment in modal
+        function toggleAssignmentModal(taskId, userId) {
+            if (!tempAssignments[taskId]) {
+                const task = allTasks.find(t => t.id === taskId);
+                tempAssignments[taskId] = task ? [...task.assigned_to] : [];
+            }
+            
+            const index = tempAssignments[taskId].indexOf(userId);
+            if (index > -1) {
+                tempAssignments[taskId].splice(index, 1);
+            } else {
+                tempAssignments[taskId].push(userId);
+            }
+            
+            // Re-render modal
+            viewTask(taskId);
+        }
+
+        // Toggle all users in modal
+        function toggleAllUsersModal(taskId) {
+            const task = allTasks.find(t => t.id === taskId);
+            if (!task) return;
+            
+            if (!tempAssignments[taskId]) {
+                tempAssignments[taskId] = [...task.assigned_to];
+            }
+            
+            const allUserIds = allUsers.map(u => u.id);
+            const currentSelected = tempAssignments[taskId] || [];
+            const allSelected = allUserIds.every(id => currentSelected.includes(id));
+            
+            if (allSelected) {
+                tempAssignments[taskId] = [];
+            } else {
+                tempAssignments[taskId] = allUserIds;
+            }
+            
+            viewTask(taskId);
+        }
+
+        // Save assignment from modal
+        async function saveAssignmentModal(taskId) {
+            const assignedTo = tempAssignments[taskId] || [];
+            
+            if (assignedTo.length === 0) {
+                showNotification('Please select at least one user to assign.', true);
+                return;
+            }
+            
+            try {
+                await fetch(`/api/tasks/${taskId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ assigned_to: assignedTo })
+                });
+                delete tempAssignments[taskId];
+                loadTasks();
+                closeModal();
+                showNotification('Task assigned successfully!');
+            } catch (error) {
+                showNotification('Error assigning task', true);
+            }
+        }
+
+        // Add remark from modal
+        async function addModalRemark(taskId) {
+            const remark = document.getElementById(`modalRemark_${taskId}`).value.trim();
+            if (!remark) {
+                showNotification('Please enter a remark.', true);
+                return;
+            }
+            
+            try {
+                await fetch(`/api/tasks/${taskId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ remark })
+                });
+                loadTasks();
+                viewTask(taskId);
+                showNotification('Remark added successfully!');
+            } catch (error) {
+                showNotification('Error adding remark', true);
+            }
+        }
+
+        // Update task status
+        async function updateTaskStatus(taskId, status) {
+            const task = allTasks.find(t => t.id === taskId);
+            if (!task) return;
+            
+            if (currentUser.role !== 'super_admin' && !isAssignedToTask(task)) {
+                showNotification('You are not authorized to update this task', true);
+                document.getElementById(`status_${taskId}`).value = task.status;
+                return;
+            }
+            
+            try {
+                await fetch(`/api/tasks/${taskId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+                loadTasks();
+                showNotification('Task status updated successfully!');
+            } catch (error) {
+                showNotification('Error updating task status', true);
+            }
+        }
+
+        // Delete task
+        async function deleteTask(taskId) {
+            if (!confirm('Are you sure you want to delete this task?')) return;
+            
+            try {
+                await fetch(`/api/tasks/${taskId}`, {
+                    method: 'DELETE'
+                });
+                loadTasks();
+                showNotification('Task deleted successfully!');
+            } catch (error) {
+                showNotification('Error deleting task', true);
+            }
+        }
+
+        // Filter tasks
+        function filterTasks() {
+            renderTable(currentTab);
+        }
+
+        // Check login status
+        async function checkAuth() {
+            try {
+                const response = await fetch('/api/current-user');
+                if (response.ok) {
+                    const user = await response.json();
+                    currentUser = user;
+                    document.getElementById('loginScreen').style.display = 'none';
+                    document.getElementById('dashboard').style.display = 'block';
+                    document.getElementById('userNameDisplay').textContent = user.name || user.email;
+                    document.getElementById('userRoleDisplay').textContent = user.role === 'super_admin' ? 'Admin' : 'User';
+                    
+                    if (user.role === 'super_admin') {
+                        document.getElementById('assignTab').style.display = 'inline-block';
+                    }
+                    
+                    loadUsers();
+                    loadTasks();
+                }
+            } catch (error) {
+                // Not logged in
+            }
+        }
+
+        // Close modal on outside click
+        document.getElementById('taskModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Auto-login with Enter key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
+                login();
+            }
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Initialize
+        checkAuth();
+    </script>
+</body>
+</html>
