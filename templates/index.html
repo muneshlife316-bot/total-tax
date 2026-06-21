@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Total Tax Hub - Submit Request</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f6f9fc 0%, #eef2f7 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .form-card {
+            max-width: 780px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 2.5rem;
+            padding: 2.5rem 2.8rem;
+            box-shadow: 0 20px 40px -12px rgba(0, 20, 30, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        @media (max-width: 550px) {
+            .form-card {
+                padding: 1.8rem 1.5rem;
+                border-radius: 1.8rem;
+            }
+        }
+
+        .hub-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e9edf4;
+            padding-bottom: 1.2rem;
+        }
+
+        .hub-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hub-title i {
+            font-size: 1.9rem;
+            color: #1a3b5d;
+            background: #dce7f5;
+            padding: 0.5rem;
+            border-radius: 18px;
+        }
+
+        .hub-title h1 {
+            font-size: 1.7rem;
+            font-weight: 600;
+            color: #0b2a41;
+        }
+
+        .hub-title h1 span {
+            font-weight: 300;
+            color: #3d6a8f;
+        }
+
+        .contact-badge {
+            background: #f0f5fb;
+            padding: 0.6rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            color: #1f4b6e;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .contact-badge a {
+            color: #1a4b6e;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .contact-badge a:hover {
+            text-decoration: underline;
+        }
+
+        .tax-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.6rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            font-size: 0.95rem;
+            color: #1e3a5a;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .form-group label i {
+            color: #3f7ca3;
+            width: 1.2rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 1px solid #dbe0e9;
+            border-radius: 18px;
+            font-size: 1rem;
+            background: #fafcff;
+            transition: 0.2s;
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: #2f6d94;
+            box-shadow: 0 0 0 4px rgba(47, 109, 148, 0.15);
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%233f6d8f" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 1.2rem center;
+            background-size: 16px;
+            cursor: pointer;
+        }
+
+        .pan-field {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            flex-wrap: wrap;
+            background: #f2f7fd;
+            padding: 0.2rem 0.2rem 0.2rem 1.2rem;
+            border-radius: 60px;
+            border: 1px solid #d6e2f0;
+        }
+
+        .pan-field .form-control {
+            border: none;
+            background: white;
+            border-radius: 40px;
+            flex: 1;
+            min-width: 120px;
+            padding: 0.7rem 1rem;
+        }
+
+        .btn-submit {
+            background: #124263;
+            border: none;
+            padding: 0.95rem 2.8rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.7rem;
+            cursor: pointer;
+            transition: 0.2s;
+            box-shadow: 0 8px 18px -6px rgba(18, 66, 99, 0.3);
+        }
+
+        .btn-submit:hover {
+            background: #0f3857;
+            transform: translateY(-2px);
+        }
+
+        #formResponse {
+            margin-top: 1.5rem;
+            padding: 0.9rem 1.2rem;
+            border-radius: 60px;
+            background: #e6f0f9;
+            color: #1a3f5c;
+            font-weight: 500;
+            display: none;
+            align-items: center;
+            gap: 0.7rem;
+            border-left: 6px solid #1f6b9b;
+        }
+
+        .footer-note {
+            margin-top: 2rem;
+            font-size: 0.75rem;
+            color: #7089a3;
+            text-align: center;
+            border-top: 1px solid #e2eaf3;
+            padding-top: 1.5rem;
+            letter-spacing: 0.2px;
+        }
+
+        .footer-note i {
+            margin: 0 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-card">
+        <div class="hub-header">
+            <div class="hub-title">
+                <i class="fas fa-file-invoice"></i>
+                <h1>Total<span>Tax</span> Hub</h1>
+            </div>
+            <div class="contact-badge">
+                <span><i class="fas fa-phone-alt"></i> <a href="tel:+919414973521">9414973521</a></span>
+                <span><i class="fas fa-envelope"></i> <a href="mailto:btpitsolution@gmail.com">btpitsolution@gmail.com</a></span>
+            </div>
+        </div>
+
+        <form id="taxForm" class="tax-form">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i> Full name (as per PAN)</label>
+                <input type="text" id="fullName" class="form-control" placeholder="e.g. Rajesh Kumar Sharma" required />
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-mobile-alt"></i> Mobile number</label>
+                <input type="tel" id="mobile" class="form-control" placeholder="10 digit mobile number" maxlength="10" required />
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-list-ul"></i> What do you want?</label>
+                <select id="serviceSelect" class="form-control" required>
+                    <option value="" disabled selected>— select an option —</option>
+                    <option value="ITR Copy">ITR Copy</option>
+                    <option value="GST 3B copy">GST 3B copy</option>
+                    <option value="File ITR">File ITR</option>
+                    <option value="Balance sheet">Balance sheet</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-pencil-alt"></i> Requirements / notes</label>
+                <input type="text" id="requirements" class="form-control" placeholder="e.g. FY 2024-25, urgent, etc." />
+            </div>
+
+            <div class="form-group">
+                <label><i class="fas fa-id-card"></i> PAN card (last 4 digits)</label>
+                <div class="pan-field">
+                    <span><i class="fas fa-asterisk" style="font-size: 0.6rem;"></i> PAN ▸</span>
+                    <input type="text" id="panDigits" class="form-control" placeholder="e.g. 1234" maxlength="4" required />
+                </div>
+            </div>
+
+            <div class="submit-wrap" style="display: flex; justify-content: flex-end;">
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-paper-plane"></i> Submit
+                </button>
+            </div>
+        </form>
+
+        <div id="formResponse">
+            <i class="fas fa-check-circle"></i>
+            <span id="responseText">Thank you! Your request has been received.</span>
+        </div>
+
+        <div class="footer-note">
+            <i class="fas fa-shield-alt"></i> Your information is safe with Total Tax Hub
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('taxForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const data = {
+                name: document.getElementById('fullName').value.trim(),
+                mobile: document.getElementById('mobile').value.trim(),
+                service: document.getElementById('serviceSelect').value,
+                requirements: document.getElementById('requirements').value.trim(),
+                pan_last4: document.getElementById('panDigits').value.trim()
+            };
+
+            // Validate
+            if (!data.name || data.name.length < 3) {
+                showResponse('Please enter your full name.', false);
+                return;
+            }
+            if (!data.mobile || !/^[0-9]{10}$/.test(data.mobile)) {
+                showResponse('Please enter a valid 10-digit mobile number.', false);
+                return;
+            }
+            if (!data.service) {
+                showResponse('Please select a service.', false);
+                return;
+            }
+            if (!data.pan_last4 || !/^[0-9]{4}$/.test(data.pan_last4)) {
+                showResponse('Please enter exactly 4 numeric digits for PAN.', false);
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/form-submit', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showResponse('✅ Form submitted successfully! Our team will contact you soon.', true);
+                    this.reset();
+                } else {
+                    showResponse('❌ Error submitting form. Please try again.', false);
+                }
+            } catch (error) {
+                showResponse('❌ Network error. Please check your connection.', false);
+            }
+        });
+
+        function showResponse(message, isSuccess = true) {
+            const div = document.getElementById('formResponse');
+            const text = document.getElementById('responseText');
+            div.style.display = 'flex';
+            text.textContent = message;
+            div.style.background = isSuccess ? '#e2f0e8' : '#ffeae8';
+            div.style.borderLeftColor = isSuccess ? '#1f8b5c' : '#b13e36';
+            const icon = div.querySelector('i');
+            icon.className = isSuccess ? 'fas fa-check-circle' : 'fas fa-exclamation-circle';
+            icon.style.color = isSuccess ? '#1f8b5c' : '#b13e36';
+            
+            setTimeout(() => { div.style.display = 'none'; }, 8000);
+        }
+
+        // Input sanitization
+        document.getElementById('panDigits').addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '').slice(0, 4);
+        });
+
+        document.getElementById('mobile').addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '').slice(0, 10);
+        });
+    </script>
+</body>
+</html>
